@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Profile;
 import br.com.fling.course.entities.Category;
 import br.com.fling.course.entities.Order;
 import br.com.fling.course.entities.OrderItem;
+import br.com.fling.course.entities.Payment;
 import br.com.fling.course.entities.Product;
 import br.com.fling.course.entities.User;
 import br.com.fling.course.entities.enums.OrderStatus;
 import br.com.fling.course.repositories.CategoryRepository;
 import br.com.fling.course.repositories.OrderItemRepository;
 import br.com.fling.course.repositories.OrderRepository;
+import br.com.fling.course.repositories.PaymentRepository;
 import br.com.fling.course.repositories.ProductRepository;
 import br.com.fling.course.repositories.UserRepository;
 
@@ -38,6 +40,9 @@ public class TestConfig implements CommandLineRunner {
 	
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
+	private PaymentRepository paymentRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -69,9 +74,9 @@ public class TestConfig implements CommandLineRunner {
 		User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456", null);
 		User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456", null);
 		
-		Order o1 = new Order(null, Instant.parse("2020-01-10T10:25:30Z"), OrderStatus.PAID, u1);
-		Order o2 = new Order(null, Instant.parse("2020-01-11T19:03:45Z"), OrderStatus.WAITING_PAYMENT, u2);
-		Order o3 = new Order(null, Instant.parse("2020-01-13T20:02:59Z"), OrderStatus.WAITING_PAYMENT, u1);
+		Order o1 = new Order(null, Instant.parse("2020-01-10T10:25:30Z"), OrderStatus.PAID, u1, null);
+		Order o2 = new Order(null, Instant.parse("2020-01-11T19:03:45Z"), OrderStatus.WAITING_PAYMENT, u2, null);
+		Order o3 = new Order(null, Instant.parse("2020-01-13T20:02:59Z"), OrderStatus.WAITING_PAYMENT, u1, null);
 
 		userRepository.saveAll(Arrays.asList(u1, u2));		
 		orderRepository.saveAll(Arrays.asList(o1, o2, o3));
@@ -82,6 +87,11 @@ public class TestConfig implements CommandLineRunner {
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
+		
+		Payment pay1 = new Payment(null, Instant.parse("2020-01-10T12:25:30Z"), o1);
+		
+		o1.setPayment(pay1);
+		orderRepository.save(o1);
 	}
 	
 	
