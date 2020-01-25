@@ -48,13 +48,12 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment, OrderStatus orderStatus, User client, Payment payment) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		super();
 		this.id = id;
 		this.moment = moment;
 		setOrderStatus(orderStatus);
 		this.client = client;
-		this.payment = payment;
 	}
 
 	public Long getId() {
@@ -103,6 +102,14 @@ public class Order implements Serializable {
 		this.payment = payment;
 	}
 
+	public Double getTotal() {
+		Double tot = 0.0;
+		for(OrderItem oi : items) {
+			tot += oi.getSubTotal();
+		}
+		return tot;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -126,10 +133,6 @@ public class Order implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	public Double total() {
-		return null;
 	}
 
 }
